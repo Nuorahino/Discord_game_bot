@@ -1,2 +1,2 @@
-# Discord_game_bot
+# Discord Game Bot
 Our own Discord bot, for playing games.
