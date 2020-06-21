@@ -1,0 +1,39 @@
+\begin{itemize}
+  \item Implement the card deck, as arrays, or stack of card elements, or simpler strings
+  \item shuffle the deck using shuffle from random
+  \item draw card simply takes the bottom or top cards
+  \item Discard pile works the same as draw pile, when reshuffeling, sum both decks and shuffle
+  \item Players who join get a role "active player" on the server,
+    when dying etc. this role gets removed
+  \item Commands can be send in a server chat, or in private
+  \item The bot respondes Error Messages in the same chat, and game info in a designated chat
+  \item Info which not everybody should see is written in private
+  \item Everybody can start a game, if the bot is in state idle, while the bot is in a game, no
+    new game can be started
+  \item only Admins, and game masters, can end games prematurely, or potentially by majority vote
+  \item Bot should be able to return, what it is waiting on / current status
+  \item At the end of the game, the bot should return to idle
+  \item Games are loaded in as cogs, when started, commands only become available then
+    \newpage
+  \item \textbf{Secret Hitler}
+  \item The President is also a server role, while chanccelor is only a backend variable
+  \item last president and chancellor is a 2-Tupel of players
+  \item for who can be become next chancellor check this tupel, or if below 5 players are alive,
+    check only last chancellor
+  \item Secret Hiler roles are stored, as a array, in an order, that the top x roles are always
+    the roles needed, to play with x players
+  \item When the game starts with x players, it takes the x highest roles, shuffles them, and
+    attributes them to a player, sending them their role in private as a picture
+  \item The role attribute is saved in a dict, which can be looked up when necessary, with player ID
+    as key
+  \item When investigating, Tag a player in server chat, and get the party membership as picture in
+    private
+  \item The Presidents tags a player @player to announce them as chancellor
+  \item The vote is being cast in private chat, the result is being published, when all votes came
+    in, into the Secret Hitler Chat, as a Table
+  \item Passed policies are stored as a int array (2-Tupel) with one number being passed fascist,
+    and one being liberal
+  \item the game board, and special actions, are being triggered by comparing with this array
+  \item {\color{red}Carefull with when policies can be rejected}
+  \item The game board will be returned into the Secret Hitler Chat as a picture
+\end{itemize}

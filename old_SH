@@ -1,0 +1,68 @@
+    @commands.command()
+    @commands.check_any(inverse_check(SH_is_dc_player))
+    #@commands.check(is_bot_activity(activity=discord.Activity(name = 'Secret Hitler, waiting for players', type = discord.ActivityType.watching)))
+    async def join_SH(self, ctx):
+        if (self._status !=  'Waiting for Players'):
+            await ctx.send(f'There currently is no game to join into')
+        elif (self.is_player(ctx.author)):
+            await ctx.send(f'{ctx.author.name} is already in the game')
+        elif (len(self._players) >= 10):
+            await ctx.send(f'The Game is already full')
+        elif not self.is_player(ctx):
+            await self._channel.send(f'{ctx.author.name} has joined for a game of Secret Hitler')
+            self._players.append(ctx.author)                       # Add the Player to the list
+
+
+    @commands.command()
+#    @commands.check(SH_is_dc_player)
+    async def leave_SH(self, ctx):
+        if (self._status !=  'Waiting for Players'):
+            await ctx.send(f'There currently is no game to leave from')
+        elif (self.is_player(ctx.author)):
+            await self._channel.send(f'{ctx.author.name} left Secret Hitler')
+            self._players.remove(ctx.author)                       # remove the Player from the list
+        else:
+            await ctx.send(f'{ctx.author.name} has not joined Secret Hitler')
+
+    @commands.command()
+    async def SH_vote_yes(self,ctx):
+        if (self._status !=  'Waiting for players to cast their vote'):
+            await ctx.send('There currently is no open vote.')
+        await ctx.send(f'{ctx.author.name} voted yes')
+        self._vote[ctx.author] = True
+        if (self.check_votes_missing() == 0):
+            await self.cast_votes()
+
+
+    @commands.command()
+    async def SH_vote_no(self,ctx):
+        if (self._status !=  'Waiting for players to cast their vote'):
+            await ctx.send('There currently is no open vote.')
+        await ctx.send(f'{ctx.author.name} voted no')
+        self._vote[ctx.author] = False
+        if (self.check_votes_missing() == 0):
+            await self.cast_votes()
+
+
+
+    @commands.command()
+    async def SH_nominate_chancellor(self,ctx, member : discord.Member):
+        if not bool(self.is_player(member)):
+            await ctx.send(f'{member.name} is not in the game')
+            return
+        if not bool(self._SH_game.is_president(ctx.author)):
+            await ctx.send('You are not the president')
+            return
+#        if member == ctx.author:
+#            await ctx.send("You can't make yourself president")
+#            return
+        if (self._SH_game.was_not_in_last_government(member)):
+            await ctx.send(f'{member.name} was in the last active government')
+            return
+        await self._channel.send(f'{ctx.author.name} nominated {member.name} as Chancellor.')
+        await self._channel.send(f'Please vote now.')
+        self._SH_game.nominate_chancellor(member)
+        self._vote = dict(zip(self._players, [None]*len(self._players)))
+        self._status = 'Waiting for players to cast their vote'
+        await self.SH_start_vote(ctx.author.name,member.name)
+
